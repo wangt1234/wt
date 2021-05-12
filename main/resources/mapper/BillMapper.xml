@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smbms.mapper.BillMapper">
+    <resultMap id="name" type="com.smbms.entity.Bill">
+        <result property="provider.proName" column="proName"></result>
+    </resultMap>
+    <select id="getBillById2" resultMap="name">
+        SELECT * FROM smbms_bill t1,smbms_provider t2
+        <where>
+            t1.id=t2.id and
+            <if test="proName!=null">productName LIKE CONCAT(CONCAT('%',#{proName},'%'))</if>
+            <if test="id=null">providerId=#{id}</if>
+            <if test="isPayment=null">isPayment=#{isPayment}</if>
+        </where>
+
+
+    </select>
+</mapper>

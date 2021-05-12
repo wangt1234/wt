@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smbms.mapper.UserMapper">
+    <select id="getUser" resultType="com.smbms.entity.User">
+        select * from smbms_user where userCode=#{userCode} and userPassword=#{userPassword}
+    </select>
+    <select id="checkUserCode" resultType="com.smbms.entity.User">
+        select * from smbms_user where userCode=#{userCode}
+    </select>
+    <select id="getUserById" resultType="com.smbms.entity.User">
+        select *,smbms_role.roleName as userRoleName from smbms_user,smbms_role where smbms_user.userRole=smbms_role.id and smbms_user.id=#{id}
+    </select>
+    <select id="getUserCount" resultType="int">
+        select count(*) from smbms_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                userName like Concat('%',#{userName},'%')
+            </if>
+            <if test="userRole!=null and userRole!=0">
+                and userRole=#{userRole}
+            </if>
+        </where>
+    </select>
+    <select id="getUserByPage" resultType="com.smbms.entity.User">
+        select *,smbms_role.RoleName as userRoleName from smbms_user,smbms_role
+        <where>
+            smbms_user.userRole=smbms_role.id
+            <if test="userName!=null and userName!=''">
+                and userName like Concat('%',#{userName},'%')
+            </if>
+            <if test="userRole!=null and userRole!=0">
+                and userRole=#{userRole}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <update id="updateByid" >
+        update smbms_user set userPassword=#{userPassword} where id=#{id}
+    </update>
+    <insert id="add">
+        insert into smbms_user(userCode, userName , userPassword ,  gender , birthday ,phone ,address ,userRole ,createdBy ,creationDate,idpicpath)
+        values (#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate},#{idpicpath})
+    </insert>
+</mapper>
